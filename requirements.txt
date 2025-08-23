@@ -1,0 +1,16 @@
+annotated-types==0.7.0
+bump2version==1.0.1
+bumpversion==0.6.0
+coverage==7.10.4
+iniconfig==2.1.0
+packaging==25.0
+pluggy==1.6.0
+pydantic==2.11.7
+pydantic_core==2.33.2
+Pygments==2.19.2
+PyMuPDF==1.26.3
+pytest==8.4.1
+pytest-cov==6.2.1
+-e git+https://github.com/Chimik-IT/scientific_pdf_loader.git@75194e2fabf230d3063ea382f63db9497edeb253#egg=scientific_pdf_loader
+typing-inspection==0.4.1
+typing_extensions==4.14.1
