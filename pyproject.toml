@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pymupdf (>=1.26.3,<2.0.0)",
-    "pydantic (>=2.11.7,<3.0.0)"
+    "pydantic (>=2.11.7,<3.0.0)",
 ]
 
 [tool.poetry]
@@ -21,6 +21,7 @@ pytest = "^8.4.1"
 coverage = "^7.10.4"
 bumpversion = "^0.6.0"
 pytest-cov = "^6.2.1"
+pylint = "^3.3.8"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -1,4 +1,3 @@
-from collections import Counter
 from typing import Optional, Iterable
 
 import pymupdf
@@ -7,8 +6,8 @@ from pymupdf import Page
 
 
 def points_from_coordinates(coordinates: tuple[int, int, int,int]) -> tuple[int, int, int,int]:
-        point_x, point_y, width, height = coordinates
-        return int(point_x), int(point_y), int(point_x) + int(width), int(point_y) + int(height)
+    point_x, point_y, width, height = coordinates
+    return int(point_x), int(point_y), int(point_x) + int(width), int(point_y) + int(height)
 
 class TobiasPage(BaseModel):
     """
@@ -26,9 +25,10 @@ class TobisPDF:
     Class that holds the information to load and extract text from a pdf file.
     """
 
-    def __init__(self, pdf_path: str,title: str,roi_text: tuple[int, int, int, int], roi_pg_number: tuple[int, int, int, int],
-                 page_offset: tuple[int, int] = (None, None), release_date: str = None, author: str = None,
-                 publisher: str = None) -> None:
+    def __init__(self, pdf_path: str,title: str,roi_text: tuple[int, int, int, int],
+                 roi_pg_number: tuple[int, int, int, int],
+                 page_offset: tuple[int, int] = (None, None),
+                 release_date: str = None, author: str = None, publisher: str = None) -> None:
         self.pages = get_pdf_pages(pdf_path)
         self.page_count = len(list(get_pdf_pages(pdf_path)))
         self.title = title
@@ -85,4 +85,3 @@ def get_roi_from_page(page: Page, coordinates: tuple[int, int, int, int]) -> str
         return roi_content
     except ValueError:
         return page_text
-
