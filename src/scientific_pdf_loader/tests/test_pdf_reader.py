@@ -19,12 +19,12 @@ def page_number_coordinates():
     return '515', '36', '44', '40'
 
 @pytest.fixture(scope="module")
-def pdf_file():
+def pdf_file_path():
     return "data/LL_Pankreaskarzinom_Langversion_3.1.pdf"
 
 @pytest.fixture(scope="module")
 def test_tobis_pdf_without_offset(pdf_file_path, page_number_coordinates, text_coordinates):
-    return TobisPDF(pdf_path=pdf_file,
+    return TobisPDF(pdf_path=pdf_file_path,
                     title="My Test PDF",
                     roi_text=text_coordinates,
                     roi_pg_number=page_number_coordinates,
@@ -32,7 +32,7 @@ def test_tobis_pdf_without_offset(pdf_file_path, page_number_coordinates, text_c
 
 @pytest.fixture(scope="module")
 def test_tobias_pdf_with_offset(pdf_file_path, page_number_coordinates, text_coordinates, offset):
-    return TobisPDF(pdf_path=pdf_file,
+    return TobisPDF(pdf_path=pdf_file_path,
                     page_offset=offset,
                     title="My Test PDF",
                     roi_text=text_coordinates,
@@ -40,8 +40,8 @@ def test_tobias_pdf_with_offset(pdf_file_path, page_number_coordinates, text_coo
                     )
 
 @pytest.fixture(scope="module")
-def pdf_pages(pdf_file):
-    return list(get_pdf_pages(pdf_path=pdf_file))
+def pdf_pages(pdf_file_path):
+    return list(get_pdf_pages(pdf_path=pdf_file_path))
 
 
 @pytest.fixture(scope="module")
@@ -63,9 +63,9 @@ def test_creation_of_TobisPDF(test_tobis_pdf_without_offset):
     assert test_tobis_pdf_without_offset.roi_pg_number == (515, 36, 515 + 44, 36 + 40)
     assert test_tobis_pdf_without_offset.roi_text == (147, 94, 147 + 440, 94 + 675)
 
-def test_get_pdf_pages(pdf_file):
+def test_get_pdf_pages(pdf_file_path):
 
-    pdf_pages = list(get_pdf_pages(pdf_path=pdf_file))
+    pdf_pages = list(get_pdf_pages(pdf_path=pdf_file_path))
 
     assert isinstance(pdf_pages, Iterable)
     assert isinstance(pdf_pages[0], Page)
