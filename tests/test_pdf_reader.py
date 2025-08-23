@@ -3,7 +3,7 @@ from typing import Iterable
 import pytest
 from pymupdf import Page
 
-from src.scientific_pdf_loader.pdf_reader import (TobisPDF, get_pdf_pages, points_from_coordinates, TobiasPage)
+from scientific_pdf_loader.pdf_reader import (TobisPDF, get_pdf_pages, points_from_coordinates, TobiasPage)
 
 
 @pytest.fixture(scope="module")
