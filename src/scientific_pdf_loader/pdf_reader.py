@@ -50,14 +50,14 @@ class TobisPDF:
             start = 0
         if stop is None:
             stop = self.page_count
-        if start <= get_roi_from_page(page, self.roi_pg_number) <= stop:
+        if get_page_number_from_page(page, self.roi_pg_number) in range(start, stop+1):
             return TobiasPage(
                 title=self.title,
                 release_date=self.release_date,
                 author=self.author,
                 publisher=self.publisher,
-                page_content=get_roi_from_page(page, self.roi_text),
-                page_number=get_roi_from_page(page, self.roi_pg_number),
+                page_content=get_text_from_page(page, self.roi_text),
+                page_number=get_page_number_from_page(page, self.roi_pg_number),
             )
         return None
 
@@ -71,17 +71,27 @@ def get_pdf_pages(pdf_path: str) -> Iterable:
     return pdf_doc.pages()
 
 
-def get_roi_from_page(page: Page, coordinates: tuple[int, int, int, int]) -> str | int:
+def get_text_from_page(page: Page, text_coordinates: tuple[int, int, int, int]) -> str:
     """
     extracts the text from the page of the PDF file
-    :param coordinates: tuple of ints describing ROI in Page
+    :param text_coordinates: tuple of ints describing ROI in Page
     :param page: pdf page
     :return: text of the page
     """
-    page_rect = pymupdf.Rect(*coordinates)
+    page_rect = pymupdf.Rect(*text_coordinates)
+    page_text = page.get_textbox(page_rect)
+    return page_text
+
+def get_page_number_from_page(page: Page, page_number_coordinates: tuple[int, int, int, int]) -> int | None:
+    """
+    extracts the text from the page of the PDF file
+    :param page_number_coordinates: tuple of ints describing ROI in Page
+    :param page: pdf page
+    :return: text of the page
+    """
+    page_rect = pymupdf.Rect(*page_number_coordinates)
     page_text = page.get_textbox(page_rect)
     try:
-        roi_content = int(page_text)
-        return roi_content
+        return int(page_text)
     except ValueError:
-        return page_text
+        return None

@@ -1,16 +1,18 @@
-from src.scientific_pdf_loader.pdf_reader import TobisPDF, get_pdf_pages
+from scientific_pdf_loader.pdf_reader import TobisPDF
+import pandas as pd
 
 if '__main__' == __name__:
-    pancreas_ll_pdf = TobisPDF(
-        pdf_path="../data/LL_Pankreaskarzinom_Langversion_3.1.pdf",
-        title="S3-Leitlinie Exokrines Pankreaskarzinom",
-        release_date="September 2024",
-        roi_text=(147, 94, 440, 675),
-        roi_pg_number=('515', '36', '44', '40'),
+    hepatocell_carcinoma_pdf = TobisPDF(
+        pdf_path="../data/2025-06_S3_Diagnostik-Therapie-Hepatozellulaeres-Karzinom-biliaere-Karzinome.pdf",
+        title="S3-Leitlinie Diagnostik und Therapie ddes Hepatozellulären Karzinoms und biliärer Karzinome",
+        release_date="Juni 2025",
+        roi_pg_number=(507, 27, 66, 43),
+        roi_text=(73, 85, 514, 678),
+        page_offset=(26, 210)
         )
 
-    pancreas_ll_pdf_page = pancreas_ll_pdf.extract(list(pancreas_ll_pdf.pages)[21])
+    pages = list(filter(lambda x: x is not None, [hepatocell_carcinoma_pdf.extract(page) for page in hepatocell_carcinoma_pdf.pages]))
 
-    print(pancreas_ll_pdf_page.page_number, "is an ", type(pancreas_ll_pdf_page.page_number))
-    print(pancreas_ll_pdf_page.page_content)
-
+    pages_for_df = [page.__dict__ for page in pages]
+    df = pd.DataFrame.from_records(pages_for_df)
+    df.to_csv("../data/hepatocell_carcinoma_pdf.csv", index=False)
