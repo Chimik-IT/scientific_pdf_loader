@@ -1,4 +1,4 @@
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Any
 
 import pymupdf
 from pydantic import BaseModel
@@ -29,7 +29,9 @@ class TobisPDF:
                  roi_pg_number: tuple[int, int, int, int],
                  page_offset: tuple[int, int] = (None, None),
                  release_date: str = None, author: str = None, publisher: str = None) -> None:
+        self.pdf_path = pdf_path
         self.pages = get_pdf_pages(pdf_path)
+        self.doc = pymupdf.open(pdf_path)
         self.page_count = len(list(get_pdf_pages(pdf_path)))
         self.title = title
         self.roi_text: tuple[int, int, int, int] = points_from_coordinates(roi_text)
@@ -39,7 +41,7 @@ class TobisPDF:
         self.author = author
         self.publisher = publisher
 
-    def extract(self, page: Page) -> TobiasPage | None:
+    def extract_text(self, page: Page) -> TobiasPage | None:
         """
         creates an instance of TobiasPage. containing metadata and context of the page
         :param page: pymupdf page
@@ -61,6 +63,21 @@ class TobisPDF:
             )
         return None
 
+    def extract_image(self, page: Page) -> list[Any] | None:
+        """
+        creates an instance of tkinter.Image
+        """
+        start, stop = self.page_offset
+        if start is None:
+            start = 0
+        if stop is None:
+            stop = self.page_count
+        if get_page_number_from_page(page, self.roi_pg_number) in range(start, stop + 1):
+            image_ref = [img[0] for img in page.get_images()]
+            images = [self.doc.extract_image(img_ref) for img_ref in image_ref]
+            return images
+
+        return None
 
 def get_pdf_pages(pdf_path: str) -> Iterable:
     """
@@ -68,7 +85,7 @@ def get_pdf_pages(pdf_path: str) -> Iterable:
     :return: pages of the pdf file as an iterable
     """
     pdf_doc = pymupdf.open(pdf_path)
-    return pdf_doc.pages()
+    return list(pdf_doc.pages())
 
 
 def get_text_from_page(page: Page, text_coordinates: tuple[int, int, int, int]) -> str:
@@ -94,4 +111,4 @@ def get_page_number_from_page(page: Page, page_number_coordinates: tuple[int, in
     try:
         return int(page_text)
     except ValueError:
-        return None
+        return page.number
